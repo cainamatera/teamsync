@@ -25,5 +25,9 @@ export class UsersService {
     const { password, ...result } = savedUser;
     return result;
   }
+
+  async findOneByEmail(email: string): Promise<User | null> {
+    return this.usersRepository.findOneBy({ email });
+  }
 }
 
