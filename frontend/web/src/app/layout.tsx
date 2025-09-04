@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
   title: 'TeamSync',
-  description: 'Seu projeto, sua equipe e sua comunicação, em um só lugar.',
+  description: 'Sua vida, seu trabalho, em um só lugar.',
 };
 
 export default function RootLayout({
@@ -15,8 +15,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR">
-      <body className={inter.className}>{children}</body>
+    <html lang="pt-BR" suppressHydrationWarning={true}>
+      <body className={`${inter.className} bg-background text-foreground`}>
+        {children}
+      </body>
     </html>
   );
 }
+

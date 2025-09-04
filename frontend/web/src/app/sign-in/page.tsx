@@ -1,34 +1,36 @@
 'use client';
 
+import { PublicNavbar } from '@/components/public-navbar';
 import axios from 'axios';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { PublicNavbar } from '@/components/public-navbar';
 
-export default function SignUpPage() {
-  const [name, setName] = useState('');
+export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const router = useRouter();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:3333/users', {
-        name,
+      const response = await axios.post('http://localhost:3333/auth/login', {
         email,
         password,
       });
-      console.log('Usuário criado com sucesso:', response.data);
+      localStorage.setItem('token', response.data.access_token);
+      router.push('/dashboard');
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
-        setError(err.response.data.message || 'Ocorreu um erro no cadastro.');
+        setError(
+          err.response.data.message || 'Ocorreu um erro ao tentar fazer login.',
+        );
       } else {
         setError('Não foi possível conectar ao servidor.');
       }
-      console.error('Erro ao criar usuário:', err);
     }
   };
 
@@ -38,32 +40,14 @@ export default function SignUpPage() {
       <main className="flex-grow flex flex-col justify-center items-center p-4">
         <div className="max-w-md w-full mx-auto">
           <h2 className="text-center text-3xl font-extrabold text-primary">
-            Crie sua conta
+            Acesse sua conta
           </h2>
           <p className="mt-2 text-center text-sm text-muted-foreground">
-            Comece a organizar seus projetos agora mesmo.
+            Bem-vindo de volta!
           </p>
         </div>
         <div className="max-w-md w-full mx-auto mt-8 bg-card p-8 border border-border rounded-lg shadow-sm">
           <form className="space-y-6" onSubmit={handleSubmit}>
-            <div>
-              <label
-                htmlFor="name"
-                className="text-sm font-medium text-foreground"
-              >
-                Nome Completo
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="mt-1 block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent sm:text-sm bg-background"
-                placeholder="Seu nome completo"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
             <div>
               <label
                 htmlFor="email"
@@ -94,10 +78,9 @@ export default function SignUpPage() {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="current-password"
                 required
                 className="mt-1 block w-full px-3 py-2 border border-input rounded-md shadow-sm placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-accent sm:text-sm bg-background"
-                placeholder="Mínimo de 8 caracteres"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -114,17 +97,17 @@ export default function SignUpPage() {
                 type="submit"
                 className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-primary-foreground bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring"
               >
-                Cadastrar
+                Entrar
               </button>
             </div>
           </form>
           <p className="mt-6 text-center text-sm text-muted-foreground">
-            Já tem uma conta?{' '}
+            Não tem uma conta?{' '}
             <Link
-              href="/sign-in"
+              href="/sign-up"
               className="font-medium text-accent hover:text-accent/80"
             >
-              Faça login
+              Cadastre-se
             </Link>
           </p>
         </div>
