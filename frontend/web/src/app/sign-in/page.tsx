@@ -22,7 +22,7 @@ export default function SignInPage() {
         password,
       });
       localStorage.setItem('token', response.data.access_token);
-      router.push('/dashboard');
+      router.push('/today');
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError(
