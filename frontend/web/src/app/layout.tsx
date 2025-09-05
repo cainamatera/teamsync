@@ -1,3 +1,4 @@
+import { Footer } from '@/components/footer';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -16,8 +17,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="pt-BR" suppressHydrationWarning={true}>
-      <body className={`${inter.className} bg-background text-foreground`}>
-        {children}
+      <body
+        className={`${inter.className} flex flex-col min-h-screen bg-background text-foreground`}
+      >
+        <div className="flex-grow">{children}</div>
+        <Footer />
       </body>
     </html>
   );
