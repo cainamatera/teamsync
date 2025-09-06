@@ -1,10 +1,27 @@
+'use client';
+
+import { useAuth } from '@/contexts/auth-context';
+
 export default function TodayPage() {
-  const userName = 'Cainã';
+  const { user, isLoading } = useAuth();
+
+  const getFirstName = (fullName: string | undefined) => {
+    if (!fullName) return '';
+    return fullName.split(' ')[0];
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <p className="text-muted-foreground">Carregando...</p>
+      </div>
+    );
+  }
 
   return (
     <div>
       <h1 className="text-3xl font-bold text-primary">
-        Bom dia, {userName}!
+        Bom dia, {getFirstName(user?.name)}!
       </h1>
       <p className="mt-2 text-muted-foreground">
         Aqui está um resumo do seu dia. Vamos torná-lo produtivo.

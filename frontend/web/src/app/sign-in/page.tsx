@@ -1,16 +1,16 @@
 'use client';
 
 import { PublicNavbar } from '@/components/public-navbar';
+import { useAuth } from '@/contexts/auth-context';
 import axios from 'axios';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 export default function SignInPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,8 +21,7 @@ export default function SignInPage() {
         email,
         password,
       });
-      localStorage.setItem('token', response.data.access_token);
-      router.push('/today');
+      await login(response.data.access_token);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError(

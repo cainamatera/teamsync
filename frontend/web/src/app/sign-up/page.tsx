@@ -1,15 +1,17 @@
 'use client';
 
+import { PublicNavbar } from '@/components/public-navbar';
+import { useAuth } from '@/contexts/auth-context';
 import axios from 'axios';
 import Link from 'next/link';
 import { useState } from 'react';
-import { PublicNavbar } from '@/components/public-navbar';
 
 export default function SignUpPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
+  const { login } = useAuth();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -21,14 +23,13 @@ export default function SignUpPage() {
         email,
         password,
       });
-      console.log('Usuário criado com sucesso:', response.data);
+      await login(response.data.access_token);
     } catch (err) {
       if (axios.isAxiosError(err) && err.response) {
         setError(err.response.data.message || 'Ocorreu um erro no cadastro.');
       } else {
         setError('Não foi possível conectar ao servidor.');
       }
-      console.error('Erro ao criar usuário:', err);
     }
   };
 
